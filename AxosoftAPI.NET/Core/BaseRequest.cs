@@ -78,7 +78,8 @@ namespace AxosoftAPI.NET.Core
 			// Add OAuth header (X-Authorization)
 			if (!string.IsNullOrWhiteSpace(client.AccessToken))
 			{
-				request.Headers.Add("X-Authorization", string.Format(@"OAuth {0}", client.AccessToken));
+				var tokenType = client.AccessTokenType.GetDescription();
+				request.Headers.Add("X-Authorization", string.Format(@"{0} {1}", tokenType, client.AccessToken));
 			}
 
 			// Return http request 

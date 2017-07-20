@@ -164,6 +164,7 @@
     <Compile Include="ScopeEnum.cs" />
     <Compile Include="SecurityRoles.cs" />
     <Compile Include="Tasks.cs" />
+    <Compile Include="TokenTypeEnum.cs" />
     <Compile Include="Users.cs" />
     <Compile Include="VersionEnum.cs" />
     <Compile Include="Workflows.cs" />

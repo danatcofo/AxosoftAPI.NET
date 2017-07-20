@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using AxosoftAPI.NET.Core;
 using AxosoftAPI.NET.Helpers;
@@ -44,6 +45,8 @@ namespace AxosoftAPI.NET
 		public string ClientSecret { get; set; }
 
 		public string AccessToken { get; set; }
+
+		public TokenTypeEnum AccessTokenType { get; set; }
 
 		public bool HasAccessToken
 		{
@@ -159,7 +162,15 @@ namespace AxosoftAPI.NET
 				var authResponse = baseRequest.Get<AuthResponse>("oauth2/token", tokenParam);
 
 				// Store and return access token
-				return (AccessToken = authResponse.AccessToken);
+
+				TokenTypeEnum tokenType;
+				AccessTokenType = Enum.TryParse(authResponse.TokenType, true, out tokenType) ? 
+					tokenType : 
+					TokenTypeEnum.OAuth;
+				
+				AccessToken = authResponse.AccessToken;
+
+				return AccessToken;
 			}
 			catch
 			{
@@ -219,6 +230,62 @@ namespace AxosoftAPI.NET
 		public bool Delete(string resource, int id, IDictionary<string, object> parameters = null)
 		{
 			return (baseRequest.Delete(resource, id, parameters) != null);
+		}
+
+		#endregion
+
+		#region Static Construction Helpers
+
+		public static Proxy FromBearerToken(string baseUrl, string token, TokenTypeEnum tokenType = TokenTypeEnum.OAuth, VersionEnum? version = null)
+		{
+			var proxy = new Proxy
+			{
+				Url = baseUrl,
+				AccessToken = token,
+				AccessTokenType = tokenType,
+			};
+
+			if (version.HasValue)
+			{
+				proxy.Version = version.Value;
+			}
+			return proxy;
+		}
+
+		public static Proxy FromClientIdAndSecret(string baseUrl, string client_id, string client_secret, VersionEnum? version = null)
+		{
+			var proxy = new Proxy
+			{
+				Url = baseUrl,
+				ClientId = client_id,
+				ClientSecret = client_secret,
+			};
+
+			if (version.HasValue)
+			{
+				proxy.Version = version.Value;
+			}
+			return proxy;
+		}
+
+		public static Proxy FromAuthorizationCode(string baseUrl, string code, string redirectUri, string client_id, string client_secret, ScopeEnum scope = ScopeEnum.ReadWrite, VersionEnum? version = null)
+		{
+			var proxy = new Proxy
+			{
+
+				Url = baseUrl,
+				ClientId = client_id,
+				ClientSecret = client_secret,
+			};
+
+			if (version.HasValue)
+			{
+				proxy.Version = version.Value;
+			}
+
+			proxy.ObtainAccessTokenFromAuthorizationCode(code, redirectUri, scope);
+
+			return proxy;
 		}
 
 		#endregion

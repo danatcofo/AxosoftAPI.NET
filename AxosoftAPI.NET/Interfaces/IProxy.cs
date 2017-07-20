@@ -14,6 +14,8 @@ namespace AxosoftAPI.NET.Interfaces
 
 		string AccessToken { get; set; }
 
+		TokenTypeEnum AccessTokenType { get; set; }
+
 		bool HasAccessToken { get; }
 	}
 }
