@@ -2,7 +2,7 @@
 
 namespace AxosoftAPI.NET.Core.Interfaces
 {
-	public interface IPicklistResource<T> : ICreateResource<T>, IDeleteResource<T>
+	public interface IPicklistResource<T> : ICreateResource<T>, IDeleteResource<T>, IGetAllResource<T>, IGetResource<T>
 	{
 	}
 }

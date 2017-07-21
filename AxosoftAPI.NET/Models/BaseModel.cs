@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AxosoftAPI.NET.Models
 {
@@ -25,5 +27,8 @@ namespace AxosoftAPI.NET.Models
 
 		[JsonProperty("last_updated_by")]
 		public User LastUpdatedBy { get; set; }
+
+		[JsonExtensionData(ReadData = true, WriteData = true)]
+		public Dictionary<string, JToken> ExtensionData { get; set; }
 	}
 }
